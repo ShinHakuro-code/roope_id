@@ -5,7 +5,7 @@
 <style>
     /* 1. Hero Section yang Dramatis */
     .hero-section {
-        /* Properti ini dipindahkan ke style inline pada tag <section> di bawah */
+        /* Properti background-image diambil dari style inline pada tag <section> */
         background-size: cover;
         background-position: center center;
         background-color: rgba(0, 0, 0, 0.5); /* Overlay gelap */
@@ -15,6 +15,19 @@
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
         margin-bottom: 2rem;
     }
+    
+    /* SOLUSI Z-INDEX: Memastikan tombol dapat diklik */
+    .hero-section .container {
+        /* Memastikan container memiliki z-index yang lebih tinggi dari background/overlay */
+        position: relative; 
+        z-index: 10; 
+    }
+    .hero-section .btn-primary {
+        /* Memastikan tombol di lapisan paling atas */
+        position: relative; 
+        z-index: 20; 
+    }
+    /* AKHIR SOLUSI Z-INDEX */
 
     .hero-section .display-4 {
         font-size: 3.5rem; 
@@ -72,7 +85,7 @@
     .category-card:hover {
         transform: translateY(-3px);
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        border: 1px solid #ff6b6b; /* Bingkai aksen saat hover */
+        border: 1px solid #ff6b6b; 
     }
 
     .category-icon {
@@ -84,7 +97,8 @@
 </style>
 
 <section class="hero-section text-center" 
-         style="background-image: url('{{ asset('images/hero.jpg') }}');">
+         style="background-image: url('{{ asset('images/hero/flower-bucket.jpg') }}');">
+    
     <div class="container">
         <h1 class="display-4 fw-bold animate__animated animate__fadeInDown">
             Roope.id
