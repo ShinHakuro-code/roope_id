@@ -175,7 +175,7 @@ class CartController extends Controller
         }
 
         return redirect()
-            ->route('user.products')
-            ->with('success', 'Order placed successfully! Total: Rp ' . number_format($order->total_amount, 0, ',', '.'));
+            ->route('user.cart') // ← balik ke keranjang agar kamu lihat notifikasi & keranjang kosong
+            ->with('success', 'Checkout berhasil! Pesanan dibuat dan keranjang dikosongkan.');
     }
 }
