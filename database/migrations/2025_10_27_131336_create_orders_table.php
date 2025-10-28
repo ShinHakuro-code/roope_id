@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->decimal('total_amount', 10, 2);
             $table->string('status')->default('pending');
             $table->text('shipping_address')->nullable();
@@ -18,22 +18,23 @@ return new class extends Migration
             $table->string('customer_phone');
             $table->timestamps();
         });
-
+    
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->constrained()->onDelete('cascade');
-            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->foreignId('order_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('product_id')->constrained()->restrictOnDelete(); // 👈 histori aman
             $table->integer('quantity');
-            $table->decimal('price', 10, 2);
+            $table->decimal('price', 10, 2); // snapshot harga
             $table->timestamps();
+    
+            $table->unique(['order_id','product_id']); // opsional, cegah duplikasi item sama
         });
     }
-
-    /**
-     * Reverse the migrations.
-     */
+    
     public function down(): void
     {
+        Schema::dropIfExists('order_items'); // 👈 drop anak dulu
         Schema::dropIfExists('orders');
     }
+    
 };
