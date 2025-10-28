@@ -97,7 +97,7 @@
 </style>
 
 <section class="hero-section text-center" 
-         style="background-image: url('{{ asset('images/hero/flower-bucket.jpg') }}');">
+         style="background-image: url('{{ asset('images/homepage.png') }}');">
     
     <div class="container">
         <h1 class="display-4 fw-bold animate__animated animate__fadeInDown">
