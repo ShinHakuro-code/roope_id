@@ -28,6 +28,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/cart/add', [CartController::class, 'add'])->name('user.cart.add');
     Route::post('/cart/update', [CartController::class, 'update'])->name('user.cart.update');
     Route::post('/cart/remove', [CartController::class, 'remove'])->name('user.cart.remove');
+
+    // ✅ TAMBAHAN: route checkout yang konsisten
+    Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('user.cart.checkout');
+
+    // ✅ Tetap pertahankan route lamamu sebagai alias/kompatibilitas:
     Route::post('/checkout', [CartController::class, 'checkout'])->name('user.checkout');
 });
 
