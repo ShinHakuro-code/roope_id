@@ -121,7 +121,12 @@
             @foreach($featuredProducts as $product)
             <div class="col-md-4 mb-4">
                 <div class="card product-card h-100">
-                    <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top" alt="{{ $product->name }}" style="height: 280px; object-fit: cover;">
+                    <img 
+    src="{{ asset('uploads/' . str_replace('products/', '', $product->image)) }}" 
+    class="card-img-top" 
+    alt="{{ $product->name }}" 
+    style="height: 280px; object-fit: cover;"
+>
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title fw-semibold text-truncate">{{ $product->name }}</h5>
                         <p class="card-text small text-muted mb-3">{{ Str::limit($product->description, 80) }}</p>

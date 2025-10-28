@@ -27,11 +27,16 @@
     <div class="row">
         <div class="col-md-8">
             @foreach($cartItems as $item)
+            @php
+                // Hapus 'products/' dari string $item->product->image
+                $cleanImage = str_replace('products/', '', $item->product->image);
+            @endphp
             <div class="card mb-3">
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col-md-2">
-                            <img src="{{ asset('storage/' . $item->product->image) }}" alt="{{ $item->product->name }}" class="img-fluid" style="height: 80px; object-fit: cover;">
+                            {{-- GAMBAR DIPERBAIKI DI SINI --}}
+                            <img src="{{ asset('uploads/' . $cleanImage) }}" alt="{{ $item->product->name }}" class="img-fluid" style="height: 80px; object-fit: cover;">
                         </div>
                         <div class="col-md-6">
                             <h5 class="mb-1">{{ $item->product->name }}</h5>

@@ -12,7 +12,7 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::with('category')->latest()->paginate(10); // ← GANTI get() MENJADI paginate()
+        $products = Product::with('category')->latest()->paginate(10); 
         return view('admin.products.index', compact('products'));
     }
 
@@ -22,6 +22,10 @@ class ProductController extends Controller
         return view('admin.products.create', compact('categories'));
     }
 
+    /**
+     * Store a newly created resource in storage.
+     * FILE BARU DISIMPAN LANGSUNG KE public/uploads/
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -34,7 +38,12 @@ class ProductController extends Controller
 
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
+            // PERBAIKAN: Menyimpan file ke root disk 'public' (yaitu public/uploads)
+            // Menggunakan '' sebagai path folder untuk menghindari subfolder 'products/'
+            $imagePath = $request->file('image')->store('', 'public'); 
+            
+            // CATATAN: Path yang tersimpan di DB adalah: namafileunik.jpg
+            // Ini akan cocok dengan kode Blade Anda: asset('uploads/namafileunik.jpg')
         }
 
         Product::create([
@@ -55,11 +64,14 @@ class ProductController extends Controller
         return view('admin.products.edit', compact('product', 'categories'));
     }
 
+    /**
+     * Update the specified resource in storage.
+     */
     public function update(Request $request, $id)
     {
         $product = Product::findOrFail($id);
 
-        $request->validate([
+        $data = $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
@@ -68,32 +80,44 @@ class ProductController extends Controller
         ]);
 
         $imagePath = $product->image;
+        
         if ($request->hasFile('image')) {
-            // Delete old image
+            // 1. Hapus gambar lama
             if ($product->image) {
-                Storage::disk('public')->delete($product->image);
+                // BUGFIX: Path di DB mengandung 'products/'. Kita bersihkan path yang lama
+                $oldFilePath = str_replace('products/', '', $product->image);
+                Storage::disk('public')->delete($oldFilePath); 
             }
-            $imagePath = $request->file('image')->store('products', 'public');
+            
+            // 2. Simpan gambar baru ke root disk 'public' (uploads)
+            $imagePath = $request->file('image')->store('', 'public'); // <-- Path kosong ('')
         }
 
-        $product->update([
-            'name' => $request->name,
-            'price' => $request->price,
-            'description' => $request->description,
-            'category_id' => $request->category_id,
-            'image' => $imagePath
-        ]);
+        $updateData = [
+            'name' => $data['name'],
+            'price' => $data['price'],
+            'description' => $data['description'],
+            'category_id' => $data['category_id'],
+            'image' => $imagePath 
+        ];
+        
+        $product->update($updateData);
 
         return redirect()->route('admin.products')->with('success', 'Product updated successfully.');
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
 
         // Delete image if exists
         if ($product->image) {
-            Storage::disk('public')->delete($product->image);
+            // BUGFIX: Bersihkan 'products/' sebelum menghapus file fisik
+            $filePath = str_replace('products/', '', $product->image);
+            Storage::disk('public')->delete($filePath);
         }
 
         $product->delete();

@@ -9,9 +9,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
+        /* Definisi Warna Aksen */
+        :root {
+            --roope-primary: #ff6b6b; /* Warna utama Anda */
+            --roope-hover: #e63946;
+            --roope-shadow: rgba(255, 107, 107, 0.25);
+        }
+
         /* 1. Background Modern */
         body {
-            /* Gradien biru-ungu lembut */
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
@@ -30,10 +36,22 @@
             width: 90%;
         }
 
-        /* 4. Styling Input Focus */
+        /* 4. Styling Input Focus (DISERASIKAN DENGAN TEMA) */
         .form-control:focus {
-            border-color: #80bdff;
-            box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+            border-color: var(--roope-primary);
+            box-shadow: 0 0 0 0.25rem var(--roope-shadow);
+        }
+        
+        /* Styling Tombol Primary (DISERASIKAN DENGAN TEMA) */
+        .btn-primary {
+            background-color: var(--roope-primary);
+            border-color: var(--roope-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--roope-hover);
+            border-color: var(--roope-hover);
         }
 
         /* ------------------------------------- */
@@ -67,31 +85,33 @@
         }
 
         .floating-text {
-            /* Animasi lembut yang berjalan lambat */
             animation: floating 3s ease-in-out infinite; 
-            display: inline-block; /* Penting agar animasi Y bekerja */
+            display: inline-block;
         }
         
         /* ------------------------------------- */
-        /* CSS KUSTOM untuk PULSE Tombol (Login) */
+        /* CSS KUSTOM untuk PULSE Tombol (DISERASIKAN) */
         /* ------------------------------------- */
 
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.5); }
-            70% { box-shadow: 0 0 0 10px rgba(0, 123, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); }
+            0% { box-shadow: 0 0 0 0 var(--roope-shadow); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 107, 107, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); }
         }
 
         .btn-primary.pulse-animation {
-            background-color: #007bff;
-            border-color: #007bff;
-            /* Terapkan animasi pulse */
+            /* Warna sudah diwarisi dari .btn-primary */
             animation: pulse 2s infinite; 
         }
 
         .btn-primary.pulse-animation:hover {
-            animation: none; /* Hentikan pulse saat di-hover */
+            animation: none;
             transform: translateY(-1px);
+        }
+        
+        /* Mengganti warna ikon dan teks primary lainnya */
+        .text-primary {
+            color: var(--roope-primary) !important;
         }
 
     </style>
@@ -103,6 +123,7 @@
             <div class="card-body p-5">
                 <div class="text-center mb-4">
                     <h2 class="mb-1 fw-bold text-dark floating-text">
+                        {{-- ICON MENGGUNAKAN text-primary yang sudah di override --}}
                         <i class="fas fa-box-open text-primary me-2"></i> Roope.id 
                     </h2>
                     <p class="text-secondary small">Masuk untuk mengelola pesanan Bucket Murah Palembang</p>
@@ -163,25 +184,20 @@
             const loginCard = document.querySelector('.card');
 
             loginForm.addEventListener('submit', function(event) {
-                // checkValidity() memeriksa required fields
                 if (!loginForm.checkValidity()) {
-                    // 1. Hentikan submit form
                     event.preventDefault();
                     event.stopPropagation();
 
-                    // 2. Restart dan jalankan animasi shake
                     loginCard.classList.remove('shake-animation');
                     setTimeout(() => {
                         loginCard.classList.add('shake-animation');
                     }, 0);
 
-                    // 3. Hapus kelas shake setelah animasi selesai
                     setTimeout(() => {
                         loginCard.classList.remove('shake-animation');
                     }, 700); 
                 }
                 
-                // Menambahkan kelas Bootstrap 'was-validated' untuk feedback form
                 loginForm.classList.add('was-validated');
             }, false);
         });

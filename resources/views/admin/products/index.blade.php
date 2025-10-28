@@ -33,11 +33,18 @@
                     </thead>
                     <tbody>
                         @foreach($products as $product)
+                            @php
+                                // Membersihkan 'products/' dari path dan menggunakan 'uploads/'
+                                $cleanImage = str_replace('products/', '', $product->image);
+                            @endphp
                             <tr>
                                 <td>{{ $product->id }}</td>
                                 <td>
                                     @if($product->image)
-                                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;">
+                                        <img src="{{ asset('uploads/' . $cleanImage) }}" 
+                                             alt="{{ $product->name }}" 
+                                             style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;"
+                                             onerror="this.onerror=null; this.src='https://via.placeholder.com/50x50?text=No+Img';">
                                     @else
                                         <span class="text-muted">No Image</span>
                                     @endif
@@ -59,7 +66,6 @@
                 </table>
             </div>
 
-            <!-- Pagination -->
             <div class="d-flex justify-content-center mt-4">
                 {{ $products->links() }}
             </div>

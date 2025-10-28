@@ -4,7 +4,15 @@
 <div class="container py-5">
     <div class="row">
         <div class="col-md-6">
-            <img src="{{ asset('storage/' . $product->image) }}" class="img-fluid rounded" alt="{{ $product->name }}">
+            @php
+            // Hapus 'products/' dari string, pastikan path bersih
+            $cleanImage = str_replace('products/', '', $product->image);
+        @endphp
+        
+        <img 
+            src="{{ asset('uploads/' . $cleanImage) }}" 
+            class="img-fluid rounded" 
+            alt="{{ $product->name }}">
         </div>
         <div class="col-md-6">
             <h1>{{ $product->name }}</h1>
@@ -50,16 +58,35 @@
     @if($relatedProducts->count() > 0)
     <div class="row mt-5">
         <div class="col-12">
-            <h3>Produk Terkait</h3>
+            <h3 class="fw-bold mb-4">Produk Terkait Lainnya</h3>
             <div class="row">
                 @foreach($relatedProducts as $relatedProduct)
-                <div class="col-md-3 mb-4">
-                    <div class="card product-card h-100">
-                        <img src="{{ asset('storage/' . $relatedProduct->image) }}" class="card-img-top" alt="{{ $relatedProduct->name }}" style="height: 200px; object-fit: cover;">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $relatedProduct->name }}</h5>
-                            <p class="text-primary fw-bold">Rp {{ number_format($relatedProduct->price, 0, ',', '.') }}</p>
-                            <a href="{{ route('user.products.show', $relatedProduct) }}" class="btn btn-outline-primary btn-sm">Detail</a>
+                @php
+                    // Hapus 'products/' dari string $relatedProduct->image
+                    $cleanImage = str_replace('products/', '', $relatedProduct->image);
+                @endphp
+                
+                <div class="col-md-4 col-lg-3 mb-4"> <div class="card product-card h-100">
+                        
+                        {{-- GAMBAR DIPERBAIKI DI SINI --}}
+                        <img 
+                            src="{{ asset('uploads/' . $cleanImage) }}" 
+                            class="card-img-top" 
+                            alt="{{ $relatedProduct->name }}" 
+                            style="height: 200px; object-fit: cover;"
+                        >
+                        
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title fw-semibold text-truncate">{{ $relatedProduct->name }}</h5>
+                            
+                            {{-- Harga menggunakan kelas konsisten --}}
+                            <p class="text-price fw-bold mt-auto mb-3">
+                                Rp {{ number_format($relatedProduct->price, 0, ',', '.') }}
+                            </p>
+                            
+                            <a href="{{ route('user.products.show', $relatedProduct) }}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-eye me-1"></i> Detail
+                            </a>
                         </div>
                     </div>
                 </div>

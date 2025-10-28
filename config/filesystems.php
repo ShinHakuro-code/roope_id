@@ -38,14 +38,12 @@ return [
             'report' => false,
         ],
 
-        'public' => [
-            'driver' => 'local',
-            'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
-            'visibility' => 'public',
-            'throw' => false,
-            'report' => false,
-        ],
+      'public' => [
+    'driver' => 'local',
+    'root' => public_path('uploads'), // <-- Ubah ROOT ke public/uploads
+    'url' => env('APP_URL').'/uploads', // <-- Ubah URL base
+    'visibility' => 'public',
+],
 
         's3' => [
             'driver' => 's3',

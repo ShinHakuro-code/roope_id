@@ -16,7 +16,7 @@ class CartController extends Controller
     public function index()
     {
         $cartItems = Cart::where('user_id', Auth::id())
-            ->with(['product:id,name,price']) // muat yang perlu saja
+            ->with(['product:id,name,price,image']) // muat yang perlu saja
             ->get();
 
         $total = $cartItems->sum(function ($item) {
